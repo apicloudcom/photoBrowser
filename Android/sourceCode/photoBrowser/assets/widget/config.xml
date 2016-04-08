@@ -1,0 +1,12 @@
+<widget id="A6965220651799"  version="0.0.1">
+    <name>APICloud</name>
+    <description>
+        a sample APICloud app.
+    </description>
+    <author email="developer@apicloud.com" href="http://www.apicloud.com">
+        developer
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <preference name="bounces" value="true" />
+</widget>

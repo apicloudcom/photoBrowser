@@ -1,11 +1,7 @@
-#*概述*
-
-可左右拖动查看的图片浏览器 （内含iOS和Android）
-
-APICloud 的 photoBrowser 模块是一个图片浏览器。由于本模块 UI 布局界面为固定模式，不能满足日益增长的广大开发者对侧滑列表模块样式的需求。因此，广大原生模块开发者，可以参考此模块的开发方式、接口定义等开发规范，或者基于此模块开发出更多符合产品设计的新 UI 布局的模块，希望此模块能起到抛砖引玉的作用。
-
-
-#模块接口文档
+/*
+Title: photoBrowser
+Description: photoBrowser
+*/
 
 <ul id="tab" class="clearfix">
 	<li class="active"><a href="#method-content">Method</a></li>
@@ -36,7 +32,7 @@ APICloud 的 photoBrowser 模块是一个图片浏览器。由于本模块 UI �
 [clearCache](#m11)
 </div>
 
-#**模块概述**
+#**概述**
 
 photoBrowser 是一个图片浏览器，支持单张、多张图片查看的功能，可放大缩小图片，支持本地和网络图片资源。若是网络图片资源则会被缓存到本地，缓存到本地上的资源可以通过 clearCache 接口手动清除。同时本模块支持横竖屏显示，在本app支持横竖屏的情况下，本模块底层会自动监听当前设备的位置状态，自动适配横竖屏以展示图片。使用此模块开发者看实现炫酷的图片浏览器。
 

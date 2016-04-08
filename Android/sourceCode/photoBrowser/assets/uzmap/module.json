@@ -1,0 +1,8 @@
+{
+	modules:[
+		{
+		    name:'photoBrowser',
+		    class:'com.uzmap.pkg.uzmodules.photoBrowser.PhotoBrowser'
+		}
+	]
+}

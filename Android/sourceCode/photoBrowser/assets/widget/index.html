@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html >
+<head>
+	<meta charset="UTF-8">
+	<meta name="view-port" content="width=device-width,height=device-height,initial-scale=1.0,user-scalable=0">
+	<title>APICloud</title>
+	<link rel="stylesheet" type="text/css" href="./css/base.css" />
+    <link rel="stylesheet" type="text/css" href="./css/common.css" />
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <h1>APICloud SDK Demo</h1>
+        </div>
+        <div id="main">
+                
+        </div>
+        <div id="footer">
+            <h5>©2014</h5>
+        </div>
+    </div>
+    
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+
+        var header = $api.byId('header');
+        var bodyHeight = window.innerHeight;
+        var offset = $api.offset(header);
+        var footer = $api.byId('footer');
+        var fPos = $api.offset(footer);
+        api.openFrame({
+            name: 'main-con',
+            url: './html/main-con.html',
+            bounces: true,
+            rect: {
+                x: offset.l,
+                y: offset.t + offset.h,
+                w: offset.w,
+                h: bodyHeight - offset.h - fPos.h
+            }
+        });
+       
+    }
+</script>
+</html>
