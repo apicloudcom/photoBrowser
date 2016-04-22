@@ -14,6 +14,7 @@
 #import "UZASIHTTPRequest.h"
 #import "EBPhotoViewController.h"
 #import <CommonCrypto/CommonDigest.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @interface ACPhotoBrowser ()
 <EBPhotoPagesDataSource, EBPhotoPagesDelegate, ASIHTTPRequestDelegate>
@@ -28,6 +29,8 @@
 @property (nonatomic, strong) EBPhotoPagesController *photoPagesController;
 
 @end
+
+BOOL photoBrowserZoomEnable;
 
 @implementation ACPhotoBrowser
 
@@ -54,6 +57,7 @@
     if (allImages.count == 0) {
         return;
     }
+    photoBrowserZoomEnable = [paramsDict_ boolValueForKey:@"zoomEnable" defaultValue:YES];
     _allImages = [NSMutableArray arrayWithArray:allImages];
     openCbid = [paramsDict_ integerValueForKey:@"cbId" defaultValue:-1];
     NSInteger activeIndex = [paramsDict_ integerValueForKey:@"activeIndex" defaultValue:0];
@@ -124,10 +128,11 @@
 }
 
 - (void)getIndex:(NSDictionary *)paramsDict_ {
+    NSInteger getIndexCbid = [paramsDict_ integerValueForKey:@"cbId" defaultValue:-1];
     NSInteger pageIndex = _photoPagesController.currentPhotoIndex;
     NSMutableDictionary *sendDict = [NSMutableDictionary dictionary];
     [sendDict setObject:[NSNumber numberWithInteger:pageIndex] forKey:@"index"];
-    [self sendResultEventWithCallbackId:openCbid dataDict:sendDict errDict:nil doDelete:NO];
+    [self sendResultEventWithCallbackId:getIndexCbid dataDict:sendDict errDict:nil doDelete:YES];
 }
 
 - (void)getImage:(NSDictionary *)paramsDict_ {
@@ -139,7 +144,8 @@
     if ([path isKindOfClass:[NSString class]] && path.length>0) {
         if ([path hasPrefix:@"http"]) {
             NSString *encodingString = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            if ([encodingString containsString:@"&"]) {
+            NSRange range = [encodingString rangeOfString:@"&"];
+            if (range.location != NSNotFound) {
                 encodingString = [encodingString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             }
             NSString *imageName = [NSString stringWithFormat:@"%@.png",[self md5:encodingString]];
@@ -271,6 +277,22 @@
                     [requestAsy startAsynchronous];
                 });
             }
+        } else if ([photoPath hasPrefix:@"assets-library://"]) {
+            // 是否是本地图片?
+            ALAssetsLibrary  *assetLib = [[ALAssetsLibrary alloc] init];
+            [assetLib assetForURL:[NSURL URLWithString:photoPath] resultBlock:^(ALAsset *asset) {
+                 // 使用asset来获取本地图片
+                 ALAssetRepresentation *assetRep = [asset defaultRepresentation];
+                 CGImageRef imgRef = [assetRep fullResolutionImage];
+                 UIImage *targetImage = [UIImage imageWithCGImage:imgRef
+                                                           scale:assetRep.scale
+                                                     orientation:(UIImageOrientation)assetRep.orientation];
+                if (targetImage) {
+                    handler(targetImage,NO);
+                }
+             } failureBlock:^(NSError *error) {
+                 // 访问库文件被拒绝,则直接使用默认图片
+             }];
         } else {
             photoPath = [self getPathWithUZSchemeURL:photoPath];
             image = [UIImage imageWithContentsOfFile:photoPath];
