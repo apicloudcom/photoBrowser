@@ -59,6 +59,8 @@ public class PhotoBrowser extends UZModule {
 	public void jsmethod_open(final UZModuleContext uzContext) {
 
 		if (mBrowserMainLayout != null) {
+			removeViewFromCurWindow(mBrowserMainLayout);
+			insertViewToCurWindow(mBrowserMainLayout, (RelativeLayout.LayoutParams)mBrowserMainLayout.getLayoutParams());
 			return;
 		}
 
@@ -76,6 +78,7 @@ public class PhotoBrowser extends UZModule {
 
 		mAdapter = new ImageBrowserAdapter(mContext, uzContext, mConfig.imagePaths, mLoader);
 		mBrowserPager.setAdapter(mAdapter);
+		mAdapter.setZoomEnable(mConfig.zoomEnabled);
 
 		mBrowserPager.setCurrentItem(mConfig.activeIndex);
 
