@@ -25,6 +25,8 @@ public class Config {
 	
 	public int bgColor;
 	
+	public boolean zoomEnabled = true;
+	
 	public Config(UZModuleContext uzContext, UZWidgetInfo widgetInfo){
 		
 		JSONArray imagesArray = uzContext.optJSONArray("images");
@@ -43,8 +45,11 @@ public class Config {
 		String placeholdImgPath = uzContext.optString("placeholderImg");
 		placeholdImg = UZUtility.makeRealPath(placeholdImgPath, widgetInfo);
 		
-		bgColor = UZUtility.parseCssColor(uzContext.optString("bgColor"));
+		if(!uzContext.isNull("zoomEnabled")){
+			zoomEnabled = uzContext.optBoolean("zoomEnabled");
+		}
 		
+		bgColor = UZUtility.parseCssColor(uzContext.optString("bgColor"));
 	}
 	
 }

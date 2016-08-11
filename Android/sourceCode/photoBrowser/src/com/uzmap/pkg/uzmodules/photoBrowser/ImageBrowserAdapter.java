@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import co.senab.photoview.PhotoView;
 import co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
+import co.senab.photoview.PhotoViewAttacher.OnViewTapListener;
 
 import com.uzmap.pkg.uzcore.UZResourcesIDFinder;
 import com.uzmap.pkg.uzcore.uzmodule.UZModuleContext;
@@ -30,6 +31,12 @@ public class ImageBrowserAdapter extends PagerAdapter{
 	private UZModuleContext mUZContext;
 	
 	private ViewGroup mViewContainer;
+	
+	private boolean zoomEnable = true;
+	
+	public void setZoomEnable(boolean zoomable){
+		this.zoomEnable = zoomable;
+	}
 
 	public ImageBrowserAdapter(Context context, UZModuleContext uzContext, ArrayList<String> imagePaths, ImageLoader imageLoader) {
 		this.mImagePaths = imagePaths;
@@ -65,6 +72,8 @@ public class ImageBrowserAdapter extends PagerAdapter{
 		int photo_view_id = UZResourcesIDFinder.getResIdID("photoView");
 		final PhotoView imageView = (PhotoView)itemView.findViewById(photo_view_id);
 		
+		imageView.setZoomable(this.zoomEnable);
+		
 		int load_progress_id = UZResourcesIDFinder.getResIdID("loadProgress");
 		final ProgressBar progress = (ProgressBar)itemView.findViewById(load_progress_id);
 		progress.setTag(position);
@@ -89,9 +98,25 @@ public class ImageBrowserAdapter extends PagerAdapter{
 			}
 		});
 		
+		
+		imageView.setOnViewTapListener(new OnViewTapListener() {
+			
+			@Override
+			public void onViewTap(View arg0, float arg1, float arg2) {
+				PhotoBrowser.callback(mUZContext, PhotoBrowser.EVENT_TYPE_CLICK, position);
+			}
+		});
+		
 		imageView.setOnPhotoTapListener(new OnPhotoTapListener() {
 			@Override
 			public void onPhotoTap(View arg0, float arg1, float arg2) {
+				PhotoBrowser.callback(mUZContext, PhotoBrowser.EVENT_TYPE_CLICK, position);
+			}
+		});
+		
+		imageView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 				PhotoBrowser.callback(mUZContext, PhotoBrowser.EVENT_TYPE_CLICK, position);
 			}
 		});

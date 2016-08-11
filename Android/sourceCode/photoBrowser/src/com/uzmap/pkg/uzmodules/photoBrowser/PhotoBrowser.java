@@ -102,7 +102,7 @@ public class PhotoBrowser extends UZModule {
 
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
-
+				
 			}
 		});
 
