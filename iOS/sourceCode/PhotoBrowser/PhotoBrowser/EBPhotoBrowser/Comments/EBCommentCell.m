@@ -56,7 +56,7 @@
 {
     [self loadAuthorAvatar];
     [self loadAuthorNameButton];
-    [self loadCommentTextLabel];
+    [self loadCommentLabel];
     [self loadDateLabel];
 }
 
@@ -65,7 +65,7 @@
 - (void)prepareForReuse
 {
     [self.authorNameButton setTitle:nil forState:UIControlStateNormal];
-    [self.commentTextLabel setText:nil];
+    [self.commentLabel setText:nil];
     [self.dateLabel setText:nil];
 }
 
@@ -97,7 +97,7 @@
     [self addSubview:button];
 }
 
-- (void)loadCommentTextLabel
+- (void)loadCommentLabel
 {
     UILabel *textLabel = [UILabel new];
     [textLabel setBackgroundColor:[UIColor redColor]];
@@ -110,7 +110,7 @@
     [textLabel setNumberOfLines:10000];
     
     [textLabel setFrame:CGRectMake(55, 18, 255, 25)];
-    [self setCommentTextLabel:textLabel];
+    [self setCommentLabel:textLabel];
     [self addSubview:textLabel];
     
 }
@@ -138,7 +138,7 @@
     NSAssert([comment conformsToProtocol:@protocol(EBPhotoCommentProtocol)], @"Comment object must conform to EBPhotoCommentProtocol");
     NSAssert(self.authorNameButton, @"Must have an button for an author name.");
     NSAssert(self.authorAvatar, @"Must have an image view for author images.");
-    NSAssert(self.commentTextLabel, @"Must have a label for comment text.");
+    NSAssert(self.commentLabel, @"Must have a label for comment text.");
     NSAssert(self.dateLabel, @"Must have a label for displaying dates.");
     
     if([comment respondsToSelector:@selector(authorName)]){
@@ -154,13 +154,13 @@
         [self.authorAvatar.layer setCornerRadius:5.0];
     }
     
-    if([comment respondsToSelector:@selector(attributedCommentText)] &&
-       [comment attributedCommentText]){
-        [self.commentTextLabel setAttributedText:[comment attributedCommentText]];
+    if([comment respondsToSelector:@selector(attributedCommentCharacter)] &&
+       [comment attributedCommentCharacter]){
+        [self.commentLabel setAttributedText:[comment attributedCommentCharacter]];
     }
     
-    if([comment respondsToSelector:@selector(commentText)]) {
-        [self.commentTextLabel setText:[comment commentText]];
+    if([comment respondsToSelector:@selector(commentCharacter)]) {
+        [self.commentLabel setText:[comment commentCharacter]];
     }
     
     [self resizeTextLabel];
@@ -185,19 +185,19 @@
 
 - (void)resizeTextLabel
 {
-    NSString *textForRow = self.commentTextLabel.attributedText ?
-                                    self.commentTextLabel.attributedText.string :
-                                    self.commentTextLabel.text;
+    NSString *textForRow = self.commentLabel.attributedText ?
+                                    self.commentLabel.attributedText.string :
+                                    self.commentLabel.text;
     
     //Get values from the comment cell itself, as an abstract class perhaps.
     //OR better, from reference cells dequeued from the table
     //http://stackoverflow.com/questions/10239040/dynamic-uilabel-heights-widths-in-uitableviewcell-in-all-orientations
     
-    CGRect textViewSize = [textForRow boundingRectWithSize:CGSizeMake(self.commentTextLabel.frame.size.width, 1000) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.commentTextLabel.font} context:nil];
-    CGRect textLabelFrame = self.commentTextLabel.frame;
+    CGRect textViewSize = [textForRow boundingRectWithSize:CGSizeMake(self.commentLabel.frame.size.width, 1000) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.commentLabel.font} context:nil];
+    CGRect textLabelFrame = self.commentLabel.frame;
     textLabelFrame.size.height = textViewSize.size.height;
     
-    [self.commentTextLabel setFrame:textLabelFrame];
+    [self.commentLabel setFrame:textLabelFrame];
 }
 
 - (void)delete:(id)sender

@@ -17,6 +17,6 @@
 @protocol EBCommentsViewDelegate <NSObject>
 
 - (void)commentsView:(EBCommentsView *)view
-   didPostNewComment:(NSString *)commentText;
+   didPostNewComment:(NSString *)commentCharacter;
 
 @end

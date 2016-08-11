@@ -18,7 +18,7 @@
 
 @property (weak) UIImageView *authorAvatar;
 @property (weak) UIButton *authorNameButton;
-@property (weak) UILabel *commentTextLabel;
+@property (weak) UILabel *commentLabel;
 @property (weak) UILabel *dateLabel;
 @property (strong, nonatomic) UIColor *highlightColor;
 

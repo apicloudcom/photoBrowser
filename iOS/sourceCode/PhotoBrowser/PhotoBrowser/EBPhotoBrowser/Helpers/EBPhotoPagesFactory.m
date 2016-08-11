@@ -716,7 +716,7 @@
                  @"If an EBPhotoPagesFactory object doesn't specify a UINib for Comment UITableViewCells it must at least specify a Class to register.");
         [commentsView.tableView registerClass:[self commentCellClass] forCellReuseIdentifier:CellReuseIdentifier];
     }
-    [commentsView.commentTextView setDelegate:photoViewController];
+    [commentsView.commentView setDelegate:photoViewController];
     [commentsView setCommentsDelegate:photoViewController];
     
     [commentsView setNeedsLayout];

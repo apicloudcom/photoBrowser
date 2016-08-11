@@ -57,7 +57,7 @@ BOOL photoBrowserZoomEnable;
     if (allImages.count == 0) {
         return;
     }
-    photoBrowserZoomEnable = [paramsDict_ boolValueForKey:@"zoomEnable" defaultValue:YES];
+    photoBrowserZoomEnable = [paramsDict_ boolValueForKey:@"zoomEnabled" defaultValue:YES];
     _allImages = [NSMutableArray arrayWithArray:allImages];
     openCbid = [paramsDict_ integerValueForKey:@"cbId" defaultValue:-1];
     NSInteger activeIndex = [paramsDict_ integerValueForKey:@"activeIndex" defaultValue:0];

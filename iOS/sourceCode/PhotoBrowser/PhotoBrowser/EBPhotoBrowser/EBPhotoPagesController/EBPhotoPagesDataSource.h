@@ -177,7 +177,7 @@ shouldAllowReportForPhotoAtIndex:(NSInteger)index;
 
 //Called when a user finishes entering a new comment. The delegate should save the comment and reload data.
 - (void)photoPagesController:(EBPhotoPagesController *)controller
-              didPostComment:(NSString *)commentText
+              didPostComment:(NSString *)commentCharacter
              forPhotoAtIndex:(NSInteger)index;
 
 //Expects an array of objects that implement the EBPhotoCommentProtocol for the given photo at index.

@@ -20,7 +20,7 @@
 #import "EBShadedView.h"
 #import "EBPhotoPagesNotifications.h"
 
-
+extern BOOL photoBrowserZoomEnable;
 static NSString *PhotoFrameKeyPath = @"frame";
 static NSString *ImageKeyPath = @"image";
 
@@ -461,7 +461,10 @@ static NSString *ImageKeyPath = @"image";
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
 {
-    return (self.image ? self.imageView : nil);
+    if (photoBrowserZoomEnable) {
+        return (self.image ? self.imageView : nil);
+    }
+    return nil;
 }
 
 - (UIImage *)image
