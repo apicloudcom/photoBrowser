@@ -30,8 +30,6 @@
 
 @end
 
-BOOL photoBrowserZoomEnable;
-
 @implementation ACPhotoBrowser
 
 @synthesize placeImage;
@@ -57,7 +55,8 @@ BOOL photoBrowserZoomEnable;
     if (allImages.count == 0) {
         return;
     }
-    photoBrowserZoomEnable = [paramsDict_ boolValueForKey:@"zoomEnabled" defaultValue:YES];
+    BOOL photoBrowserZoomEnable = [paramsDict_ boolValueForKey:@"zoomEnabled" defaultValue:YES];
+    [EBPhotoPagesController setZoomEnable:photoBrowserZoomEnable];
     _allImages = [NSMutableArray arrayWithArray:allImages];
     openCbid = [paramsDict_ integerValueForKey:@"cbId" defaultValue:-1];
     NSInteger activeIndex = [paramsDict_ integerValueForKey:@"activeIndex" defaultValue:0];

@@ -63,8 +63,13 @@ static NSString *kActionSheetIndexKey= @"actionSheetTargetIndex";
 #pragma mark -
 #pragma mark - EBPhotoPagesController
 
+BOOL photoBrowserZoomEnable;
+
 @implementation EBPhotoPagesController
 
++ (void)setZoomEnable:(BOOL)enable {
+    photoBrowserZoomEnable = enable;
+}
 
 - (id)init
 {
@@ -529,6 +534,9 @@ static NSString *kActionSheetIndexKey= @"actionSheetTargetIndex";
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    if (self.showStatusBar) {
+        return;
+    }
     [self setStatusBarDisabled:YES withAnimation:animated];
 }
 
@@ -711,6 +719,9 @@ static NSString *kActionSheetIndexKey= @"actionSheetTargetIndex";
 
 - (void)setStatusBarDisabled:(BOOL)disabled withAnimation:(BOOL)animated
 {
+    if (self.forbideAnimStatus) {
+        animated = NO;
+    }
     UIStatusBarAnimation animation = animated ? UIStatusBarAnimationFade :
     UIStatusBarAnimationNone;
     BOOL statusBarHidden = disabled ? YES : self.originalStatusBarVisibility;
