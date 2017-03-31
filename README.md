@@ -49,6 +49,7 @@ photoBrowser 是一个图片浏览器，支持单张、多张图片查看的功�
 ## **模块接口**
 
 <div id="open"></div>
+
 # **open**
 
 打开图片浏览器
@@ -132,6 +133,7 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="close"></div>
+
 # **close**
 
 关闭图片浏览器
@@ -152,6 +154,7 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="hide"></div>
+
 # **hide**
 
 隐藏图片浏览器
@@ -172,6 +175,7 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="show"></div>
+
 # **show**
 
 显示图片浏览器
@@ -192,6 +196,7 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="setIndex"></div>
+
 # **setIndex**
 
 设置当前显示图片
@@ -222,6 +227,7 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="getIndex"></div>
+
 # **getIndex**
 
 获取当前图片在图片路径数组内的索引
@@ -261,6 +267,7 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="getImage"></div>
+
 # **getImage**
 
 获取指定图片在本地的绝对路径
@@ -312,6 +319,7 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="setImage"></div>
+
 # **setImage**
 
 设置指定位置的图片，**若设置的是网络图片加载成功或失败会给 open 接口回调该加载事件**
@@ -348,6 +356,7 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="appendImage"></div>
+
 # **appendImage**
 
 往已打开的图片浏览器里添加图片（拼接在最后）
@@ -381,6 +390,7 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="deleteImage"></div>
+
 # **deleteImage**
 
 删除指定位置的图片
@@ -412,6 +422,7 @@ iOS系统，Android系统
 
 
 <div id="clearCache"></div>
+
 # **clearCache**
 
 清除缓存到本地的网络图片，**本接口只清除本模块缓存的数据，若要清除本 app 缓存的所有数据则调用 api.clearCache**
