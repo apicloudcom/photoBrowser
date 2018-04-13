@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>WinA</title>
+    <link rel="stylesheet" type="text/css" href="css/api.css" />
+    <link rel="stylesheet" type="text/css" href="css/box.css" />
+    <script type="text/javascript" src="script/public.js"></script>
+    <style>
+    	p{
+    		color:#999;
+    		padding:5px;
+    	}
+    </style>
+	<script type="text/javascript">
+	
+		function openPhotoBrowser(){
+			var photoBrowser = api.require('photoBrowser');
+			photoBrowser.open({
+    		images: [
+        		'http://pic6.nipic.com/20091207/3337900_161732052452_2.jp',
+        		'http://pic4.nipic.com/20091121/3764872_215617048242_2.jp',
+        		'http://pic6.nipic.com/20091207/3337900_161732052452_2.jpg',
+        		 'http://pic4.nipic.com/20091121/3764872_215617048242_2.jpg',
+        		 'http://dc.hunanzx.gov.cn/admin/userfiles/1/images/zyPushInfo/images/2018/02/01/yunbao180129.jpeg',
+        		 'http://dc.hunanzx.gov.cn/admin/userfiles/1/images/zyPushInfo/images/2018/02/01/yunbao180129.jpeg',
+    		],
+    		placeholderImg: 'widget://image/refresh.png',
+    		zoomEnabled:true,
+    		bgColor: '#000'
+			}, function(ret, err) {
+    			
+			});
+		}
+	</script>
+</head>
+<body>
+    
+    <button onclick="openPhotoBrowser()"> openPhotoBrowser </button>
+    
+</body>
+</html>

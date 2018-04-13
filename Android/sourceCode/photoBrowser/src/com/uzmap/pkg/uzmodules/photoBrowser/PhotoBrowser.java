@@ -44,7 +44,7 @@ public class PhotoBrowser extends UZModule {
 
 	public PhotoBrowser(UZWebView webView) {
 		super(webView);
-		mLoader = new ImageLoader(mContext.getCacheDir().getAbsolutePath());
+		mLoader = new ImageLoader(mContext, mContext.getCacheDir().getAbsolutePath());
 	}
 
 	private View mBrowserMainLayout;
@@ -56,6 +56,7 @@ public class PhotoBrowser extends UZModule {
 
 	private UZModuleContext mUZContext;
 
+	@SuppressWarnings("deprecation")
 	public void jsmethod_open(final UZModuleContext uzContext) {
 
 		if (mBrowserMainLayout != null) {
@@ -63,6 +64,8 @@ public class PhotoBrowser extends UZModule {
 			insertViewToCurWindow(mBrowserMainLayout, (RelativeLayout.LayoutParams)mBrowserMainLayout.getLayoutParams());
 			return;
 		}
+		
+		ImageDownLoader.mCachePath = mContext.getExternalCacheDir().getAbsolutePath();
 
 		mConfig = new Config(uzContext, this.getWidgetInfo());
 		int main_pager_id = UZResourcesIDFinder.getResLayoutID("photobrowser_main_layout");
@@ -73,10 +76,11 @@ public class PhotoBrowser extends UZModule {
 		int browserPagerId = UZResourcesIDFinder.getResIdID("browserPager");
 		mBrowserPager = (HackyViewPager) mBrowserMainLayout.findViewById(browserPagerId);
 
-		Bitmap placeHolderBitmap = getBitmap(mConfig.placeholdImg);
-		mLoader.setPlaceHolderBitmap(placeHolderBitmap);
+		// Bitmap placeHolderBitmap = getBitmap(mConfig.placeholdImg);
+		// mLoader.setPlaceHolderBitmap(placeHolderBitmap);
 
 		mAdapter = new ImageBrowserAdapter(mContext, uzContext, mConfig.imagePaths, mLoader);
+		mAdapter.setPlaceholdImg(mConfig.placeholdImg);
 		mBrowserPager.setAdapter(mAdapter);
 		mAdapter.setZoomEnable(mConfig.zoomEnabled);
 
@@ -85,7 +89,7 @@ public class PhotoBrowser extends UZModule {
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 		insertViewToCurWindow(mBrowserMainLayout, params);
 
-		callback(uzContext, EVENT_TYPE_SHOW, -1);
+		callback(uzContext, EVENT_TYPE_SHOW, mBrowserPager.getCurrentItem());
 
 		// pageChangeListener
 		mBrowserPager.setOnPageChangeListener(new OnPageChangeListener() {
@@ -105,7 +109,6 @@ public class PhotoBrowser extends UZModule {
 				
 			}
 		});
-
 	}
 
 	public void jsmethod_show(UZModuleContext uzContext) {
@@ -172,9 +175,15 @@ public class PhotoBrowser extends UZModule {
 	}
 
 	public void jsmethod_getImage(UZModuleContext uzContext) {
-		int index = uzContext.optInt("index");
-		if (mAdapter != null && mLoader != null && index < mAdapter.getDatas().size() && index >= 0) {
-			String imagePath = mAdapter.getDatas().get(index);
+		int index = uzContext.optInt("index", -1);
+		if (mAdapter != null && mLoader != null && index < mAdapter.getDatas().size()) {
+			
+			String imagePath = null;
+			if(index >= 0){
+				imagePath = mAdapter.getDatas().get(index);
+			} else {
+				imagePath = mAdapter.getDatas().get(mBrowserPager.getCurrentItem());
+			}
 			if (!TextUtils.isEmpty(imagePath) && imagePath.startsWith("http")) {
 				callback(uzContext, mLoader.getCachePath(imagePath));
 			} else {
@@ -224,7 +233,6 @@ public class PhotoBrowser extends UZModule {
 						});
 					}
 				});
-
 			} else {
 				mConfig.imagePaths.set(index, imagePath);
 			}
@@ -245,7 +253,7 @@ public class PhotoBrowser extends UZModule {
 	public void jsmethod_appendImage(UZModuleContext uzContext) {
 
 		JSONArray appendedPathArr = uzContext.optJSONArray("images");
-
+		
 		if (mConfig == null) {
 			return;
 		}
@@ -281,7 +289,6 @@ public class PhotoBrowser extends UZModule {
 
 	public void jsmethod_clearCache(UZModuleContext uzContext) {
 		if (mLoader != null) {
-
 			new Thread(new Runnable() {
 				@Override
 				public void run() {

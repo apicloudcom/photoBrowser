@@ -1,8 +1,28 @@
 {
 	modules:[
 		{
+		    name:'eas',
+		    class:'com.apicloud.eventdemo.EasDelegate'
+		},
+		{
+		    name:'moduleDemo',
+		    class:'com.apicloud.moduleDemo.APIModuleDemo'
+		},
+		{
+		    name:'scrollPicture',
+		    class:'com.apicloud.moduleScrollPicture.ModuleScrollPicture'
+		},
+		{
+		    name:'cusHeader',
+		    class:'com.apicloud.moduleRefresh.CusRefreshHeader'
+		},
+		{
+		    name:'syncModule',
+		    class:'com.apicloud.syncInterface.SyncModule'
+		},
+		{
 		    name:'photoBrowser',
-		    class:'com.uzmap.pkg.uzmodules.photoBrowser.PhotoBrowser'
+			class:'com.uzmap.pkg.uzmodules.photoBrowser.PhotoBrowser'
 		}
 	]
 }

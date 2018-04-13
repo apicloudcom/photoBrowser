@@ -27,6 +27,7 @@
 @property (nonatomic, strong) UIImage *placeImage;
 @property (nonatomic, strong) NSMutableArray *allImages;
 @property (nonatomic, strong) EBPhotoPagesController *photoPagesController;
+@property (nonatomic, assign) BOOL isSetImage;
 
 @end
 
@@ -169,6 +170,7 @@
     [self.allImages setObject:imagePath atIndexedSubscript:setImgIndex];
     if (setImgIndex == _photoPagesController.currentPhotoIndex) {
         if (_photoPagesController) {
+            self.isSetImage = YES;
             [_photoPagesController setNoAnimCurrentIndex:setImgIndex];
         }
     }
@@ -183,7 +185,7 @@
         [_allImages addObjectsFromArray:images];
     }
     if (_photoPagesController) {
-        [_photoPagesController setCurrentIndex:_photoPagesController.currentPhotoIndex];
+        [_photoPagesController setNoAnimCurrentIndex:_photoPagesController.currentPhotoIndex];
     }
 }
 
@@ -224,21 +226,19 @@
         NSString *photoPath = self.allImages[index];
         UIImage *image = nil;
         if ([photoPath hasPrefix:@"http"]) {
-            NSString *encodingString = [photoPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            NSRange targetRange = [encodingString rangeOfString:@"&"];
-            if (targetRange.location != NSNotFound) {
-                encodingString = [encodingString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSURL *url = [NSURL URLWithString:photoPath];
+            if (!url) {
+                url = [NSURL URLWithString:[photoPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
             }
-            UIImage *image = [self getImageInCacheWithURLStr:encodingString];
+            UIImage *image = [self getImageInCacheWithURLStr:url.absoluteString];
             if (image) {
                 handler(image,NO);
             } else {
                 dispatch_sync(dispatch_get_main_queue(), ^{
                     __weak ACPhotoBrowser *asyImg = self;
-                    NSURL *urlStr=[NSURL URLWithString:encodingString];
-                    __block UZASIHTTPRequest *requestAsy = [UZASIHTTPRequest requestWithURL:urlStr];
+                    __block UZASIHTTPRequest *requestAsy = [UZASIHTTPRequest requestWithURL:url];
                     [requestAsy setValidatesSecureCertificate:NO];
-                    NSString *fileName = [NSString stringWithFormat:@"%@.png",[self md5:encodingString]];
+                    NSString *fileName = [NSString stringWithFormat:@"%@.png",[self md5:url.absoluteString]];
                     [requestAsy setDownloadDestinationPath:[self getImagePathInCache:fileName]];
                     [requestAsy setDelegate:self];
                     [requestAsy setTimeOutSeconds:15];
@@ -247,7 +247,7 @@
                         requestAsy = nil;
                         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
                         dispatch_async(queue, ^{
-                            UIImage *image = [asyImg getImageInCacheWithURLStr:encodingString];
+                            UIImage *image = [asyImg getImageInCacheWithURLStr:url.absoluteString];
                             if (image) {
                                 handler(image,NO);
                                 NSMutableDictionary *sendDict = [NSMutableDictionary dictionary];
@@ -320,6 +320,11 @@ shouldAllowDeleteForPhotoAtIndex:(NSInteger)index {
 #pragma mark - EBPPhotoPagesDelegate
 
 - (void)photoPagesControllerDidChanged:(EBPhotoPagesController *)photoPagesController withIndex:(NSInteger)pageIndex {
+    if (self.isSetImage) {
+        self.isSetImage = NO;
+        return;
+    }
+    
     NSMutableDictionary *sendDict = [NSMutableDictionary dictionary];
     [sendDict setObject:@"change" forKey:@"eventType"];
     [sendDict setObject:[NSNumber numberWithInteger:pageIndex] forKey:@"index"];

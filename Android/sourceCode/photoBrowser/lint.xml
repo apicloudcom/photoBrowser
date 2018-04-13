@@ -2,5 +2,7 @@
 <lint>
     <issue id="HandlerLeak">
         <ignore path="src/com/apicloud/moduleDemo/InnerGroup.java" />
+        <ignore path="src/com/apicloud/moduleDemo/ScrollPictureView.java" />
+        <ignore path="src/com/apicloud/moduleScrollPicture/ScrollPictureView.java" />
     </issue>
 </lint>

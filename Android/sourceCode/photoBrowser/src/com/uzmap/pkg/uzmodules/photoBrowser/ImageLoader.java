@@ -24,6 +24,9 @@ import java.util.concurrent.Executors;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
@@ -33,6 +36,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.View;
@@ -41,6 +45,7 @@ import android.widget.ProgressBar;
 /**
  * @author Robot
  */
+@SuppressLint("NewApi") 
 public class ImageLoader {
 
 	public static final String TAG = "lyh";
@@ -86,9 +91,14 @@ public class ImageLoader {
 	 */
 	public static final int TIME_OUT = 3000;
 	
-	public ImageLoader(){}
+	private Context mCtx;
 	
-	public ImageLoader(String cachePath){
+	public ImageLoader(Context context){
+		this.mCtx = context;
+	}
+	
+	public ImageLoader(Context context, String cachePath){
+		this.mCtx = context;
 		CACHE_PATH = cachePath;
 	}
 
@@ -276,7 +286,6 @@ public class ImageLoader {
 		}
 
 		File file = new File(path);
-		
 		try {
 			FileInputStream input = new FileInputStream(file);
 			Bitmap bitmap = BitmapFactory.decodeStream(input);
@@ -462,6 +471,18 @@ public class ImageLoader {
 
 		});
 	}
+	
+	public float getScreenWidth(){
+		DisplayMetrics dm = new DisplayMetrics();  
+        ((Activity)mCtx).getWindowManager().getDefaultDisplay().getMetrics(dm);  
+        return dm.widthPixels * dm.density;   
+	}
+	
+	public float getScreenHeight(){
+		DisplayMetrics dm = new DisplayMetrics();  
+        ((Activity)mCtx).getWindowManager().getDefaultDisplay().getMetrics(dm);  
+        return dm.heightPixels * dm.density;  
+	}
 
 	/**
 	 * <P>
@@ -473,7 +494,6 @@ public class ImageLoader {
 	 * @param localFile
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	public Bitmap getSampledBitmap(String localFile) {
 		
 		Log.i(TAG, "=== " + localFile);
@@ -486,18 +506,18 @@ public class ImageLoader {
 		newOpts.inJustDecodeBounds = false;
 		int w = newOpts.outWidth;
 		int h = newOpts.outHeight;
-		float hh = 1920f;//
-		float ww = 1080f;//
+		float hh = 1280f;//getScreenHeight();//
+		float ww = 720f;//getScreenWidth();//
 		int be = 1;
 		if (w > h && w > ww) {
 			be = (int) (newOpts.outWidth / ww);
 		} else if (w < h && h > hh) {
 			be = (int) (newOpts.outHeight / hh);
 		}
-		if (be <= 0)
+		if (be <= 1)
 			be = 1;
+		
 		newOpts.inSampleSize = be;
-
 		newOpts.inPreferredConfig = Config.ARGB_8888;
 		newOpts.inPurgeable = true;
 		newOpts.inInputShareable = true;
@@ -522,8 +542,7 @@ public class ImageLoader {
 			outputStream.write(buffer, 0, len);
 			curByteCount += len;
 
-			float progressRange = (float) curByteCount / (float) totalCount
-					* 100f;
+			float progressRange = (float) curByteCount / (float) totalCount * 100f;
 			mProgressListener.onLoadProgress((int) progressRange);
 		}
 		outputStream.close();
