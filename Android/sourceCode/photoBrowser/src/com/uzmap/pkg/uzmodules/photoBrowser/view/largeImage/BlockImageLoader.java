@@ -93,6 +93,7 @@ public class BlockImageLoader {
      *
      * @param factory BitmapRegionDecoder加载的工厂
      */
+    
     public void setBitmapDecoderFactory(BitmapDecoderFactory factory) {
         if (mLoadData != null) {
             release(mLoadData);
@@ -866,6 +867,7 @@ public class BlockImageLoader {
             if (DEBUG) {
                 Log.d(TAG, "start LoadBlockTask position:" + position + " currentScale:" + scale);
             }
+            
         }
 
         @Override
@@ -903,6 +905,8 @@ public class BlockImageLoader {
                 decodingOptions.inSampleSize = scale;
                 // 加载clipRect的区域的图片块
                 bitmap = decoder.decodeRegion(clipImageRect, decodingOptions);
+                
+                
             } catch (OutOfMemoryError e) {
                 e.printStackTrace();
                 throwable = e;

@@ -43,7 +43,6 @@
 @property (nonatomic, readonly) NSAttributedString *attributedCaption;
 @property (nonatomic, readonly) NSDictionary *metaData;
 @property (readonly) BOOL tagsHidden;
-
 - (id)initWithIndex:(NSInteger)photoIndex delegate:(id<EBPhotoViewControllerDelegate>)aDelegate;
 @end
 

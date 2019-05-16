@@ -28,7 +28,8 @@
 @property (strong) EBPhotoPagesFactory *photoPagesFactory;
 @property (strong) UIColor *backgroundColor;
 @property (assign) BOOL showStatusBar, forbideAnimStatus;
-
+//@property (nonatomic,assign) BOOL gdadjustsContentModeForImageSize;
+//@property (nonatomic,assign) NSInteger gdmode;
 @property (nonatomic, readonly) UIBarButtonItem *doneBarButtonItem;
 @property (nonatomic, readonly) UIBarButtonItem *cancelBarButtonItem;
 @property (nonatomic, readonly) UIBarButtonItem *tagBarButtonItem;

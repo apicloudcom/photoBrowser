@@ -28,6 +28,8 @@ public class Config {
 	
 	public boolean zoomEnabled = true;
 	
+	public int openAnimTime = 0;
+	
 	public Config(UZModuleContext uzContext, UZWidgetInfo widgetInfo){
 		
 		JSONArray imagesArray = uzContext.optJSONArray("images");
@@ -36,8 +38,11 @@ public class Config {
 				String imagePath = imagesArray.optString(i);
 				if(imagePath.startsWith("http")){
 					imagePaths.add(imagePath);
-				} else {
+				} else if (imagePath.startsWith("/") || imagePath.startsWith("fs") || imagePath.startsWith("widget")) {
+					
 					imagePaths.add(UZUtility.makeRealPath(imagePath, widgetInfo));
+				}else {
+					imagePaths.add(imagePath);
 				}
 			}
 		}
@@ -51,6 +56,8 @@ public class Config {
 		}
 		
 		bgColor = UZUtility.parseCssColor(uzContext.optString("bgColor"));
+		
+		openAnimTime = (int) (uzContext.optDouble("atime",0)*1000);
 	}
 	
 }

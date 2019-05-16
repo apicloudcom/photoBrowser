@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.apicloud.pkg.sdk;
+package com.apicloud.photoBrowser;
 
 public final class R {
     public static final class attr {

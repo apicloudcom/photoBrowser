@@ -12,9 +12,11 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
- */
+*/
+
 package com.uzmap.pkg.uzmodules.photoBrowser.view.largeImage;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -27,13 +29,16 @@ import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ScrollerCompat;
+
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewConfiguration;
+
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
@@ -95,6 +100,7 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
         paint = new Paint();
         paint.setColor(Color.GRAY);
         paint.setAntiAlias(true);
+        
     }
     
     
@@ -104,6 +110,7 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
     	this.mCanZoom = canZoom;
     }
 
+    @SuppressLint("ClickableViewAccessibility") 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
     	if(mCanZoom){
@@ -206,10 +213,11 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
             notifyInvalidate();
         }
     }
-
+    
     @Override
-    public void setImage(BitmapDecoderFactory factory) {
+    public void setImage(BitmapDecoderFactory factory, boolean isPlaceHolder) {
         setImage(factory, null);
+        this.isPlaceHolder = isPlaceHolder;
     }
 
     @Override
@@ -378,8 +386,11 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        
         int viewWidth = getWidth();
         int viewHeight = getHeight();
+        
+        
         if (viewWidth == 0) {
             return;
         }
@@ -399,16 +410,20 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
                 mDrawable.draw(canvas);
             }
         } else {
+        	
             int mOffsetX = 0;
             int mOffsetY = 0;
             int left = getScrollX();
             int right = left + viewWidth;
             int top = getScrollY();
             int bottom = top + viewHeight;
+            
+    
             float width = mScale * getWidth();
             float imgWidth = imageBlockImageLoader.getWidth();
 
             float imageScale = imgWidth / width;
+            
 
             // 需要显示的图片的实际宽度。
             imageRect.left = (int) Math.ceil((left - mOffsetX) * imageScale);
@@ -424,6 +439,7 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
                 imageBlockImageLoader.loadImageBlocks(drawDatas, imageScale, imageRect, viewWidth, viewHeight);
             }
             if (BlockImageLoader.DEBUG) {
+            	Log.i("debug", "debug branch");
                 for (int i = 0; i < drawDatas.size(); i++) {
                     BlockImageLoader.DrawData data = drawDatas.get(i);
                     Rect drawRect = data.imageRect;
@@ -438,10 +454,12 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
                         drawRect.top += 3;
                         drawRect.bottom -= 3;
                         drawRect.right -= 3;
+                                    
                         canvas.drawBitmap(data.bitmap, data.srcRect, drawRect, null);
                     }
                 }
             } else {
+            	Log.i("debug", "debug else branch");
                 if (drawDatas.isEmpty()) {
                     if (mDrawable != null) {
                         mDrawable.setBounds(drawOffsetX, drawOffsetY, drawOffsetX + contentWidth, drawOffsetY + contentHeight);
@@ -454,6 +472,7 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
                         drawRect.top = (int) (Math.ceil(drawRect.top / imageScale) + mOffsetY) + drawOffsetY;
                         drawRect.right = (int) (Math.ceil(drawRect.right / imageScale) + mOffsetX) + drawOffsetX;
                         drawRect.bottom = (int) (Math.ceil(drawRect.bottom / imageScale) + mOffsetY) + drawOffsetY;
+                        
                         canvas.drawBitmap(data.bitmap, data.srcRect, drawRect, null);
                     }
                 }
@@ -465,6 +484,10 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
     private List<BlockImageLoader.DrawData> drawDatas = new ArrayList<BlockImageLoader.DrawData>();
 
     private Rect imageRect = new Rect();
+    
+    private boolean firstLoad = true;
+    
+    private boolean isPlaceHolder = true;
 
     @Override
     public void onBlockImageLoadFinished() {
@@ -472,7 +495,22 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
         if (mOnImageLoadListener != null) {
             mOnImageLoadListener.onBlockImageLoadFinished();
         }
+        
+        if(isPlaceHolder){
+        	mScale = 0.5f;
+        	setScale(mScale, (int)scaleGestureDetector.getFocusX(), (int)scaleGestureDetector.getFocusY());
+        	return;
+        }
+        
+        if(getWidth() > getHeight() && firstLoad){
+        	mScale = 0.5f;
+        	setScale(mScale, (int)scaleGestureDetector.getFocusX(), (int)scaleGestureDetector.getFocusY());
+        	firstLoad = false;
+        }
+        
     }
+    
+    
 
     @Override
     public void onLoadImageSize(final int imageWidth, final int imageHeight) {

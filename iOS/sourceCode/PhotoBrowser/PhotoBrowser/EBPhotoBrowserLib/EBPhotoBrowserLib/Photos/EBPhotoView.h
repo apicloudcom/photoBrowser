@@ -27,7 +27,7 @@
 //If set to NO, the content mode will always remain at UIViewContentModeScaleAspectFit
 //This property is set to YES by default
 @property (assign) BOOL adjustsContentModeForImageSize;
-
+@property (nonatomic,assign) BOOL scaleAspectFit;
 - (UIImage *)image;
 - (void)setImage:(UIImage *)image;
 

@@ -7,7 +7,12 @@ APICloud 的 photoBrowser 模块是一个图片浏览器。由于本模块 UI �
 
 ## 模块接口文档
 
-<p style="color: #ccc; margin-bottom: 30px;">来自于：APICloud 官方</p>
+/*
+Title: photoBrowser
+Description: photoBrowser
+*/
+
+<p style="color: #ccc; margin-bottom: 30px;">来自于：APICloud 官方<a style="background-color: #95ba20; color:#fff; padding:4px 8px;border-radius:5px;margin-left:30px; margin-bottom:0px; font-size:12px;text-decoration:none;" target="_blank" href="//www.apicloud.com/mod_detail/photoBrowser">立即使用</a></p>
 
 <ul id="tab" class="clearfix">
 	<li class="active"><a href="#method-content">Method</a></li>
@@ -27,9 +32,14 @@ APICloud 的 photoBrowser 模块是一个图片浏览器。由于本模块 UI �
 [deleteImage](#deleteImage)
 [clearCache](#clearCache)
 
+
 </div>
 
-# **概述**
+# 论坛示例
+
+为帮助用户更好更快的使用模块，论坛维护了一个[示例](https://community.apicloud.com/bbs/thread-114189-1-1.html)，示例中包含示例代码、知识点讲解、注意事项等，供您参考。 
+
+#* *概述**
 
 photoBrowser 是一个图片浏览器，支持单张、多张图片查看的功能，可放大缩小图片，支持本地和网络图片资源。若是网络图片资源则会被缓存到本地，缓存到本地上的资源可以通过 clearCache 接口手动清除。同时本模块支持横竖屏显示，在本app支持横竖屏的情况下，本模块底层会自动监听当前设备的位置状态，自动适配横竖屏以展示图片。使用此模块开发者看实现炫酷的图片浏览器。
 
@@ -37,8 +47,8 @@ photoBrowser 是一个图片浏览器，支持单张、多张图片查看的功�
 
 开发者使用此模块时可以用 frame 的形式打开并添加到主窗口上，该 frame 不可设置位置和大小，其宽高默认和当前设备屏幕的宽高相同。模块打开后可再 open 一个自定义的 frame 贴在本模块上，从而实现自定义图片浏览器样式和功能。需要适配横竖屏时，开发者可通过api对象监听当前设备的位置状态，以改变自己自定义的 frame 的横竖屏展示，而图片的展示模块内部会自动适配横竖屏，最终实现了整个浏览器的横竖屏配置。在本模块的 open 接口内可以获取图片的下载状态，通过 getImage 接口获取目标图片在本地的绝对路径，以实现保存到系统相册的功能。详情请参考模块接口参数说明。
 
-![图片说明](http://docs.apicloud.com/img/docImage/imageBrowser.jpg)
 
+<img src="/img/docImage/module-doc-img/ext/photoBrowser/photoBrowser1.PNG" width=400 />
 
 ## [实例widget下载地址](https://github.com/XM-Right/PhotoBrowser-Example/archive/master.zip)
 
@@ -49,7 +59,6 @@ photoBrowser 是一个图片浏览器，支持单张、多张图片查看的功�
 ## **模块接口**
 
 <div id="open"></div>
-
 # **open**
 
 打开图片浏览器
@@ -61,7 +70,7 @@ open({params}, callback(ret))
 images：
 
 - 类型：数组
-- 描述：要读取的图片路径组成的数组，图片路径支持 fs://、http:// 协议
+- 描述：要读取的图片路径组成的数组，图片路径支持 fs://、http:// 协议、base64
 
 activeIndex：
 
@@ -85,6 +94,19 @@ zoomEnabled：
 - 类型：布尔
 - 描述：（可选项）是否打开缩放手势识别功能（随手势放大缩小图片）
 - 默认：true
+
+
+mode：
+
+- 类型：数字
+- 描述：（可选项）图片的现实模式；1：为图片原本大小 2：图片宽度等比例放大到宽等于屏幕款;android不支持此参数
+- 默认：1
+
+atime：
+
+- 类型：数字
+- 描述：（可选项）打开动画的执行时间，传0无动画
+- 默认：0
 
 ## callback(ret)
 
@@ -133,7 +155,6 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="close"></div>
-
 # **close**
 
 关闭图片浏览器
@@ -154,7 +175,6 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="hide"></div>
-
 # **hide**
 
 隐藏图片浏览器
@@ -175,7 +195,6 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="show"></div>
-
 # **show**
 
 显示图片浏览器
@@ -196,7 +215,6 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="setIndex"></div>
-
 # **setIndex**
 
 设置当前显示图片
@@ -227,7 +245,6 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="getIndex"></div>
-
 # **getIndex**
 
 获取当前图片在图片路径数组内的索引
@@ -267,7 +284,6 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="getImage"></div>
-
 # **getImage**
 
 获取指定图片在本地的绝对路径
@@ -319,7 +335,6 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="setImage"></div>
-
 # **setImage**
 
 设置指定位置的图片，**若设置的是网络图片加载成功或失败会给 open 接口回调该加载事件**
@@ -345,7 +360,7 @@ image：
 var photoBrowser = api.require('photoBrowser');
 photoBrowser.setImage({
     index: 2,
-    image: 'http://docs.apicloud.com/img/docImage/imageBrowser.jpg'
+    image: '//docs.apicloud.com/img/docImage/imageBrowser.jpg'
 });
 ```
 
@@ -356,7 +371,6 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="appendImage"></div>
-
 # **appendImage**
 
 往已打开的图片浏览器里添加图片（拼接在最后）
@@ -390,7 +404,6 @@ iOS系统，Android系统
 可提供的1.0.0及更高版本
 
 <div id="deleteImage"></div>
-
 # **deleteImage**
 
 删除指定位置的图片
@@ -422,7 +435,6 @@ iOS系统，Android系统
 
 
 <div id="clearCache"></div>
-
 # **clearCache**
 
 清除缓存到本地的网络图片，**本接口只清除本模块缓存的数据，若要清除本 app 缓存的所有数据则调用 api.clearCache**

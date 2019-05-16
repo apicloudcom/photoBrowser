@@ -28,4 +28,10 @@ public class InputStreamBitmapDecoderFactory implements BitmapDecoderFactory {
         BitmapFactory.decodeStream(inputStream, new Rect(),options);
         return new int[]{options.outWidth, options.outHeight};
     }
+
+	@Override
+	public String getImagePath() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

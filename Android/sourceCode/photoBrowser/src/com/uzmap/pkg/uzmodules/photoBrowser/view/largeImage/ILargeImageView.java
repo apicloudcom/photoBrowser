@@ -19,7 +19,7 @@ public interface ILargeImageView {
 
     void setOnImageLoadListener(BlockImageLoader.OnImageLoadListener onImageLoadListener);
 
-    void setImage(BitmapDecoderFactory factory);
+    void setImage(BitmapDecoderFactory factory, boolean isPlaceHolder);
 
     void setImage(BitmapDecoderFactory factory, Drawable defaultDrawable);
 

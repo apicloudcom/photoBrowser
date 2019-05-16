@@ -83,7 +83,7 @@ static NSString *ImageKeyPath = @"image";
     
     [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
     
-    [self setAdjustsContentModeForImageSize:YES];
+//    [self setAdjustsContentModeForImageSize:YES];
     
     [self loadTouchGestureRecognizers];
     
@@ -302,7 +302,7 @@ static NSString *ImageKeyPath = @"image";
     } else {
         newContentMode = UIViewContentModeScaleAspectFit;
     }
-    
+
     if(self.imageView.contentMode != newContentMode){
         [self.imageView setContentMode:newContentMode];
     }

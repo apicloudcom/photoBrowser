@@ -172,6 +172,7 @@ BOOL photoBrowserZoomEnable;
     
     NSAssert([viewController isKindOfClass:[EBPhotoViewController class]], @"EBPhotoPageViewController requires the use of EBPhotoViewController kind of classes.");
     EBPhotoViewController *photoViewController = (EBPhotoViewController *)viewController;
+    photoViewController.photoView.adjustsContentModeForImageSize = self.adjustsContentModeForImageSize;
     NSInteger previousIndex = photoViewController.photoIndex - 1;
     UIViewController *newController = [self pageViewController:pageViewController viewControllerAtIndex:previousIndex];
     return newController;
@@ -187,6 +188,7 @@ BOOL photoBrowserZoomEnable;
     
     NSAssert([viewController isKindOfClass:[EBPhotoViewController class]], @"EBPhotoPageViewController requires the use of EBPhotoViewController kind of classes.");
     EBPhotoViewController *photoViewController = (EBPhotoViewController *)viewController;
+    photoViewController.photoView.adjustsContentModeForImageSize = self.adjustsContentModeForImageSize;
     NSInteger nextIndex = photoViewController.photoIndex + 1;
     UIViewController *newController = [self pageViewController:pageViewController viewControllerAtIndex:nextIndex];
     return newController;
@@ -200,6 +202,7 @@ BOOL photoBrowserZoomEnable;
         EBPhotoViewController *newPhotoViewController = [self.photoPagesFactory
                                                           photoViewControllerWithIndex:index
                                                           forPhotoPagesController:self];
+        newPhotoViewController.photoView.adjustsContentModeForImageSize = self.adjustsContentModeForImageSize;
         [self loadDataForPhotoViewController:newPhotoViewController];
         return newPhotoViewController;
     }
@@ -283,7 +286,7 @@ BOOL photoBrowserZoomEnable;
     }
     
     EBPhotoViewController *photoViewController = [self photoViewControllerWithIndex:index];
-    
+    photoViewController.photoView.adjustsContentModeForImageSize = self.adjustsContentModeForImageSize;
     BOOL photoHasTags = photoViewController.tagPopovers.count ? YES : NO;
     if(photoHasTags == NO){
         [mutableUpperItems removeObject:self.toggleTagsBarButtonItem];

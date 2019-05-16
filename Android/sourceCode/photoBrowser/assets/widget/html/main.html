@@ -1,0 +1,247 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        label {
+            margin: 10px;
+            font-size: 24px;
+        }
+
+        ul {
+            margin-bottom: 10px;
+        }
+
+        ul li {
+            margin: 5px 10px;
+            padding: 5px;
+            color: #000;
+            word-wrap: break-word;
+        }
+
+        .btn{
+            text-decoration: underline;
+            color: red;
+            width: 100%;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <label>Hello APP</label>
+    <div class="btn" tapmode onclick="jumpPublish();">跳转到发布图片页面</div>
+    <div id='sys-info'></div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var ver = api.version;
+        var sType = api.systemType;
+        var sVer = api.systemVersion;
+        var id = api.deviceId;
+        var model = api.deviceModel;
+        var name = api.deviceName;
+        var cType = api.connectionType;
+        var winName = api.winName;
+        var winWidth = api.winWidth;
+        var winHeight = api.winHeight;
+        var frameName = api.frameName || '';
+        var frameWidth = api.frameWidth || '';
+        var frameHeight = api.frameHeight || '';
+
+        var str = '<ul>';
+        str += '<li>引擎版本信息: ' + ver + '</li>';
+        str += '<li>系统类型: ' + sType + '</li>';
+        str += '<li>系统版本: ' + sVer + '</li>';
+        str += '<li>设备标识: ' + id + '</li>';
+        str += '<li>设备型号: ' + model + '</li>';
+        str += '<li>设备名称: ' + name + '</li>';
+        str += '<li>网络状态: ' + cType + '</li>';
+        str += '<li>主窗口名字: ' + winName + '</li>';
+        str += '<li>主窗口宽度: ' + winWidth + '</li>';
+        str += '<li>主窗口高度: ' + winHeight + '</li>';
+        str += '<li>子窗口名字: ' + frameName + '</li>';
+        str += '<li>子窗口宽度: ' + frameWidth + '</li>';
+        str += '<li>子窗口高度: ' + frameHeight + '</li>';
+        str += '</ul>';
+
+
+        var sysType = api.systemType;
+        var centerX , size;
+        var marginBot = 0;
+        var addBtnWidth;
+        var iconWidth = window.innerWidth * 0.067;
+
+        if(sysType == 'ios'){
+              marginBot = 30;
+              addBtnWidth = window.innerWidth*0.22;
+
+          }else{
+              marginBot = 13;
+              addBtnWidth = window.innerWidth*0.20;
+
+        }
+
+        if(sysType != 'ios'){
+            centerX = 42;
+            size = 6;
+        }else{
+            centerX = 24;
+            size = 6;
+        }
+
+        var NVTabBar = api.require('NVTabBar');
+            NVTabBar.open({
+                styles: {
+                    bg: '#ffffff',
+                    h: 50,
+                    dividingLine: {
+                        width: 0,
+                        color: '#000'
+                    },
+                    badge: {
+                       bgColor: '#FF0000',
+                       numColor: '#fff',
+                       size: size,
+                       centerX: centerX,
+                       centerY: 3,
+                       fontSize: 6
+                    }
+                },
+                items: [{
+                    w: api.winWidth / 5.0,
+                    iconRect: {
+                        w: iconWidth,
+                        h: iconWidth,
+                    },
+                    icon: {
+                        normal: 'widget://image/shouye1.png',
+                        highlight: 'widget://image/shouye.png',
+                        selected: 'widget://image/shouye.png'
+                    },
+                    title: {
+                        text: '首页',
+                        size: 12.0,
+                        normal: '#7f7f7f',
+                        selected: '#c67df4',
+                        marginB: 3.0
+                    }
+                }, {
+                    w: api.winWidth / 5.0,
+                    iconRect: {
+                        w: iconWidth,
+                        h: iconWidth,
+                    },
+                    icon: {
+                        normal: 'widget://image/xiaoxi1.png',
+                        highlight: 'widget://image/xiaoxi.png',
+                        selected: 'widget://image/xiaoxi.png'
+                    },
+                    title: {
+                        text: '消息',
+                        size: 12.0,
+                        normal: '#7f7f7f',
+                        selected: '#c67df4',
+                        marginB: 3.0
+                    }
+                }, {
+                    w: api.winWidth / 5.0,
+                    bg: {
+                        marginB: marginBot,
+                        image: 'rgba(255,255,255,0)'
+                    },
+                    iconRect: {
+                        w: addBtnWidth,
+                        h: addBtnWidth
+                    },
+                    icon: {
+                        normal: 'widget://image/fabu1.png',
+                        highlight: 'widget://image/fabu.png',
+                        selected: 'widget://image/fabu1.png'
+                    },
+                    title: {
+                        text : '333',
+                        size: 0.0,
+                        normal: '#696969',
+                        selected: '#eb4f38',
+                        marginB: 0
+                    }
+                }, {
+                    w: api.winWidth / 5.0,
+                    bg: {
+                        marginB: 0,
+                        image: 'rgba(255,255,255)'
+                    },
+                    iconRect: {
+                        w: iconWidth,
+                        h: iconWidth,
+                    },
+                    icon: {
+                        normal: 'widget://image/quanzi1.png',
+                        highlight: 'widget://image/quanzi.png',
+                        selected: 'widget://image/quanzi.png'
+                    },
+                    title: {
+                        text: '圈子',
+                        size: 12.0,
+                        normal: '#7f7f7f',
+                        selected: '#c67df4',
+                        marginB: 3.0
+                    }
+                }, {
+                    w: api.winWidth / 5.0,
+                    bg: {
+                        marginB: 0,
+                        image: 'rgba(255,255,255)'
+                    },
+                    iconRect: {
+                        w: iconWidth,
+                        h: iconWidth,
+                    },
+                    icon: {
+                        normal: 'widget://image/wode1.png',
+                        highlight: 'widget://image/wode.png',
+                        selected: 'widget://image/wode.png'
+                    },
+                    title: {
+                        text: '我的',
+                        size: 12.0,
+                        normal: '#7f7f7f',
+                        selected: '#c67df4',
+                        marginB: 3.0
+                    }
+                }],
+                selectedIndex: 0
+            }, function(ret, err) {
+
+            });
+
+            NVTabBar.setBadge({
+                index: 1,
+                badge: 10
+            });
+
+            NVTabBar.setBadge({
+                index: 1
+            });
+    };
+
+    function jumpPublish(){
+        api.openWin({
+            name: 'photoBrower_win',
+            url: './photoBrower_win.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+</script>
+
+</html>

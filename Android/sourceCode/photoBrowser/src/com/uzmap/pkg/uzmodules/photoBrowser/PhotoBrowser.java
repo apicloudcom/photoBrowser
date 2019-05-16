@@ -21,9 +21,9 @@ import android.os.Looper;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.ScaleAnimation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import co.senab.photoview.PhotoView;
 
 import com.uzmap.pkg.uzcore.UZResourcesIDFinder;
 import com.uzmap.pkg.uzcore.UZWebView;
@@ -31,9 +31,10 @@ import com.uzmap.pkg.uzcore.uzmodule.UZModule;
 import com.uzmap.pkg.uzcore.uzmodule.UZModuleContext;
 import com.uzmap.pkg.uzkit.UZUtility;
 import com.uzmap.pkg.uzmodules.photoBrowser.ImageLoader.OnLoadCompleteListener;
+import com.uzmap.pkg.uzmodules.photoBrowser.view.largeImage.LargeImageView;
 
 public class PhotoBrowser extends UZModule {
-
+	
 	public static final String EVENT_TYPE_SHOW = "show";
 	public static final String EVENT_TYPE_CHANGE = "change";
 	public static final String EVENT_TYPE_CLICK = "click";
@@ -44,14 +45,13 @@ public class PhotoBrowser extends UZModule {
 
 	public PhotoBrowser(UZWebView webView) {
 		super(webView);
-		mLoader = new ImageLoader(mContext, mContext.getCacheDir().getAbsolutePath());
+		mLoader = new ImageLoader(context(), context().getCacheDir().getAbsolutePath());
 	}
 
 	private View mBrowserMainLayout;
 	private HackyViewPager mBrowserPager;
 	private ImageLoader mLoader;
 	private ImageBrowserAdapter mAdapter;
-
 	private Config mConfig;
 
 	private UZModuleContext mUZContext;
@@ -65,21 +65,25 @@ public class PhotoBrowser extends UZModule {
 			return;
 		}
 		
-		ImageDownLoader.mCachePath = mContext.getExternalCacheDir().getAbsolutePath();
+		ImageDownLoader.mCachePath = context().getExternalCacheDir().getAbsolutePath();
 
 		mConfig = new Config(uzContext, this.getWidgetInfo());
 		int main_pager_id = UZResourcesIDFinder.getResLayoutID("photobrowser_main_layout");
 
-		mBrowserMainLayout = View.inflate(mContext, main_pager_id, null);
+		mBrowserMainLayout = View.inflate(context(), main_pager_id, null);
 		mBrowserMainLayout.setBackgroundColor(mConfig.bgColor);
+		
+		ScaleAnimation scaleAnimation = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, ViewUtil.getScreenWidth(context())/2, ViewUtil.getScreenHeight(context())/2);
+		scaleAnimation.setDuration(mConfig.openAnimTime);
+		mBrowserMainLayout.startAnimation(scaleAnimation);
 
 		int browserPagerId = UZResourcesIDFinder.getResIdID("browserPager");
 		mBrowserPager = (HackyViewPager) mBrowserMainLayout.findViewById(browserPagerId);
 
-		// Bitmap placeHolderBitmap = getBitmap(mConfig.placeholdImg);
-		// mLoader.setPlaceHolderBitmap(placeHolderBitmap);
+		Bitmap placeHolderBitmap = getBitmap(mConfig.placeholdImg);
+		mLoader.setPlaceHolderBitmap(placeHolderBitmap);
 
-		mAdapter = new ImageBrowserAdapter(mContext, uzContext, mConfig.imagePaths, mLoader);
+		mAdapter = new ImageBrowserAdapter(context(), uzContext, mConfig.imagePaths, mLoader);
 		mAdapter.setPlaceholdImg(mConfig.placeholdImg);
 		mBrowserPager.setAdapter(mAdapter);
 		mAdapter.setZoomEnable(mConfig.zoomEnabled);
@@ -116,6 +120,8 @@ public class PhotoBrowser extends UZModule {
 			mBrowserMainLayout.setVisibility(View.VISIBLE);
 		}
 	}
+	
+	
 
 	public void jsmethod_hide(UZModuleContext uzContext) {
 		if (mBrowserMainLayout != null) {
@@ -201,11 +207,12 @@ public class PhotoBrowser extends UZModule {
 		}
 
 		if (index >= 0 && index < mAdapter.getCount() && !TextUtils.isEmpty(imagePath)) {
+			
+			mConfig.imagePaths.set(index, imagePath);
 			View view = getExistChild(index);
 			if (view != null) {
-
 				int photo_view_id = UZResourcesIDFinder.getResIdID("photoView");
-				final PhotoView imageView = (PhotoView) view.findViewById(photo_view_id);
+				final LargeImageView imageView = (LargeImageView) view.findViewById(photo_view_id);
 
 				int load_progress_id = UZResourcesIDFinder.getResIdID("loadProgress");
 				final ProgressBar progress = (ProgressBar) view.findViewById(load_progress_id);
@@ -233,9 +240,8 @@ public class PhotoBrowser extends UZModule {
 						});
 					}
 				});
-			} else {
-				mConfig.imagePaths.set(index, imagePath);
 			}
+			
 		}
 	}
 
@@ -269,7 +275,6 @@ public class PhotoBrowser extends UZModule {
 		int curItemIndex = mBrowserPager.getCurrentItem();
 		mBrowserPager.setAdapter(mAdapter);
 		mBrowserPager.setCurrentItem(curItemIndex);
-
 	}
 
 	public void jsmethod_deleteImage(UZModuleContext uzContext) {
@@ -278,12 +283,10 @@ public class PhotoBrowser extends UZModule {
 		}
 		int index = uzContext.optInt("index");
 		if (index >= 0 && index < mConfig.imagePaths.size()) {
-
 			int curItemIndex = mBrowserPager.getCurrentItem();
 			mConfig.imagePaths.remove(index);
 			mBrowserPager.setAdapter(mAdapter);
 			mBrowserPager.setCurrentItem(curItemIndex - 1);
-			
 		}
 	}
 

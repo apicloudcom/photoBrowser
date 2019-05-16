@@ -1,36 +1,69 @@
-<!DOCTYPE HTML>
+<!doctype html>
 <html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width"/>
-    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
-    <title>WinC</title>
-    <link rel="stylesheet" type="text/css" href="css/api.css" />
-    <link rel="stylesheet" type="text/css" href="css/box.css" />
-    <script type="text/javascript" src="script/public.js"></script>
-    <style>
-    	p{
-    		color:#999;
-    		padding:5px;
-    	}
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+
+        .wrap {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+        }
+
+        header {
+            height: 44px;
+            width: 100%;
+            text-align: center;
+            background-color: #81a9c3;
+            color: #fff;
+            line-height: 44px;
+            font-size: 20px;
+        }
+
+        .flex-1 {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+        }
+
+        footer {
+            height: 30px;
+            width: 100%;
+            background-color: #81a9c3;
+            color: white;
+            line-height: 30px;
+            text-align: center;
+        }
     </style>
-	<script type="text/javascript">
-	    apiready = function(){
-			fixStatusBar();//沉浸式效果，支持IOS7及Android4.4及以上
-			openContent('index_frm.html', 'index_frm');//打开主frame
-			$('year').innerHTML = new Date().getFullYear();
-	    };
-	</script>
 </head>
-<body>
-    <div id="wrap">
-        <div id='header'>
-            <h1>模块开发实例</h1>
-        </div>
-        <div id="main"></div>
-        <div id="footer">
-            <h5>APICloud Copyright &copy;<span id="year"></span> </h5>
-        </div>
-    </div>
+
+<body class="wrap">
+  
 </body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        //输出Log，Log将显示在APICloud Studio控制台
+        // console.log("Hello World! Hello APICloud!");
+       api.openFrame({
+            name: 'main',
+            url: 'index_frm.html',
+            bounces: true,
+            rect: { // 推荐使用Margin布局，用于适配屏幕的动态变化
+                w: 'auto', // main页面的宽度 自适应屏幕宽度
+                h: 'auto'
+            }
+        });
+
+    };
+</script>
+
 </html>

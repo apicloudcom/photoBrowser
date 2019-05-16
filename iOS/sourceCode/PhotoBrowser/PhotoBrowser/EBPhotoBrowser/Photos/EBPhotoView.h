@@ -21,7 +21,6 @@
 
 
 @property (strong, readonly) UIImageView *imageView;
-
 //If set to YES, the UIImageView for a photo will use content mode UIViewContentModeCenter if the image is
 //smaller than the UIImageView's frame, to prevent the image from scaling up to a pixelated size.
 //If set to NO, the content mode will always remain at UIViewContentModeScaleAspectFit

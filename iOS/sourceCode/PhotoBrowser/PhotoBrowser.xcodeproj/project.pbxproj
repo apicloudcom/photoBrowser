@@ -10,6 +10,7 @@
 		034D501F1C577387008CCF8A /* ACPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 034D4FE51C577387008CCF8A /* ACPhotoBrowser.m */; };
 		034D50321C577464008CCF8A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 034D50311C577464008CCF8A /* Foundation.framework */; };
 		034D50341C5774AB008CCF8A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 034D50331C5774AB008CCF8A /* UIKit.framework */; };
+		451C96A9226F1E040098BF37 /* EBPhotoView_Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 451C96A8226F1E040098BF37 /* EBPhotoView_Category.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -46,6 +47,8 @@
 		034D50301C57743C008CCF8A /* NSDictionaryUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionaryUtils.h; sourceTree = "<group>"; };
 		034D50311C577464008CCF8A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		034D50331C5774AB008CCF8A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		451C96A7226F1E040098BF37 /* EBPhotoView_Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EBPhotoView_Category.h; sourceTree = "<group>"; };
+		451C96A8226F1E040098BF37 /* EBPhotoView_Category.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EBPhotoView_Category.m; sourceTree = "<group>"; };
 		B5A280C21DDC12A700CC7B3B /* EBCaptionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBCaptionView.h; sourceTree = "<group>"; };
 		B5A280C41DDC12A700CC7B3B /* EBCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBCommentCell.h; sourceTree = "<group>"; };
 		B5A280C51DDC12A700CC7B3B /* EBCommentsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EBCommentsTableView.h; sourceTree = "<group>"; };
@@ -107,6 +110,8 @@
 			children = (
 				034D4FE41C577387008CCF8A /* ACPhotoBrowser.h */,
 				034D4FE51C577387008CCF8A /* ACPhotoBrowser.m */,
+				451C96A7226F1E040098BF37 /* EBPhotoView_Category.h */,
+				451C96A8226F1E040098BF37 /* EBPhotoView_Category.m */,
 				034D4FE61C577387008CCF8A /* EBPhotoBrowser */,
 				034D50111C577387008CCF8A /* uzasi */,
 			);
@@ -286,6 +291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				034D501F1C577387008CCF8A /* ACPhotoBrowser.m in Sources */,
+				451C96A9226F1E040098BF37 /* EBPhotoView_Category.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

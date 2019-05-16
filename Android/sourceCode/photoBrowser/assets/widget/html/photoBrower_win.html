@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css">
+    <link rel="stylesheet" type="text/css" href="../css/iconfont.css">
+    <style>
+        .aui-bar-nav {
+            background: #000;
+        }
+
+        .aui-bar-nav .aui-pull-left {
+            padding: 0 1.11rem;
+        }
+
+        .aui-bar-nav .aui-pull-right{
+            padding: 0 1.15rem;
+        }
+
+        .titleBack{
+            /*background: url('../image/background.jpg') 0 0 no-repeat;*/
+        }
+
+        .aui-title{
+            color: white;
+            text-align: center;
+        }
+
+        .icon-fanhui{
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header" class="aui-bar aui-bar-nav titleBack" style="padding-top:25px;">
+        <a class="aui-pull-left" tapmode onclick="api.closeWin();">
+            <span class="icon iconfont icon-fanhui"> < </span>
+        </a>
+        <div class="aui-title">发布图片</div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+
+    var header,headerH;
+
+    apiready = function() {
+
+        fnOpenPublishFrame();
+
+    };
+
+    function fnOpenPublishFrame(){
+        api.openFrame({
+            name: 'photoBrower_frame',
+            url: './photoBrower_frame.html',
+            rect: {
+                x: 0,
+                y: headerH,
+                w: 'auto',
+                h: 'auto'
+            },
+            bounces: true,
+            bgColor: 'rgba(0,0,0,0)',
+            vScrollBarEnabled: false,
+            hScrollBarEnabled: false
+        });
+    }
+</script>
+
+</html>

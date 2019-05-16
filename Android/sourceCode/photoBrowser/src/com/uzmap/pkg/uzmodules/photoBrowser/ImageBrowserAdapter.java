@@ -4,16 +4,24 @@
  * Licensed under the terms of the The MIT License (MIT).
  * Please see the license.html included with this distribution for details.
  */
+
 package com.uzmap.pkg.uzmodules.photoBrowser;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +76,7 @@ public class ImageBrowserAdapter extends PagerAdapter{
 	
 	@SuppressLint("NewApi")
 	@Override
-	public Object instantiateItem(ViewGroup container, final int position) {
+	public Object instantiateItem(final ViewGroup container, final int position) {
 		
 		mViewContainer = container;
 		
@@ -100,17 +108,15 @@ public class ImageBrowserAdapter extends PagerAdapter{
 						if(!TextUtils.isEmpty(mPlaceholdImg)){
 							if(mPlaceholdImg.startsWith("file://")){
 								try {
-									imageView.setImage(new InputStreamBitmapDecoderFactory(mContext.getAssets().open(mPlaceholdImg.replace("file:///android_asset/", ""))));
+									imageView.setImage(new InputStreamBitmapDecoderFactory(mContext.getAssets().open(mPlaceholdImg.replace("file:///android_asset/", ""))), true);
 									Log.i("debug", "== 1" + mPlaceholdImg.replace("file:///android_asset/", ""));
 								} catch (IOException e) {
 									e.printStackTrace();
-									
-									imageView.setImage(new FileBitmapDecoderFactory(mPlaceholdImg.replaceAll("file://", "")));
+									imageView.setImage(new FileBitmapDecoderFactory(mPlaceholdImg.replaceAll("file://", "")), true);
 									Log.i("debug", "== 2" + mPlaceholdImg.replaceAll(".+widget", "widget"));
-									
 								}
 							} else {
-								imageView.setImage(new FileBitmapDecoderFactory(mPlaceholdImg));
+								imageView.setImage(new FileBitmapDecoderFactory(mPlaceholdImg), true);
 							}
 							
 						}
@@ -123,9 +129,8 @@ public class ImageBrowserAdapter extends PagerAdapter{
 					
 					@Override
 					public void onFinish(String savePath) {
-						imageView.setImage(new FileBitmapDecoderFactory(savePath));
+						imageView.setImage(new FileBitmapDecoderFactory(savePath), false);
 						progress.setVisibility(View.GONE);
-						
 						PhotoBrowser.callback(mUZContext, PhotoBrowser.EVENT_TYPE_LOADSUCCESSED, (Integer)progress.getTag());
 					}
 					
@@ -135,13 +140,19 @@ public class ImageBrowserAdapter extends PagerAdapter{
 					}
 				}).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, imagePath);
 				
-			} else {
+			} else if (imagePath.startsWith("/") || imagePath.startsWith("fs") || imagePath.startsWith("widget") || imagePath.startsWith("file")) {
 				try{
-					imageView.setImage(new FileBitmapDecoderFactory(imagePath));
-					progress.setVisibility(View.GONE);
+//					String modifiedPath = fixedImage(imagePath, container.getContext());
+//					imageView.setImage(new FileBitmapDecoderFactory(modifiedPath));
+//					progress.setVisibility(View.GONE);
+					new LoadImageTask(imageView, imagePath, container.getContext(), progress).execute();
 				}catch(Exception e){
 					e.printStackTrace();
 				}
+			}else {
+				byte[] data = Base64.decode(imagePath, Base64.DEFAULT);
+				imageView.setImage(BitmapFactory.decodeByteArray(data, 0, data.length));
+				progress.setVisibility(View.GONE);
 			}
 		}
 		
@@ -173,6 +184,61 @@ public class ImageBrowserAdapter extends PagerAdapter{
 	
 	public ArrayList<String> getDatas(){
 		return mImagePaths;
+	} 
+	
+	class LoadImageTask extends AsyncTask<Void, Void, String>{
+		
+		private LargeImageView mImageView;
+		private Context mContext;
+		private String srcPath;
+		private ProgressBar mBar;
+		
+		public LoadImageTask(LargeImageView imageView, String path, Context context, ProgressBar bar){
+			this.mImageView = imageView;
+			this.mContext = context;
+			this.srcPath = path;
+			this.mBar = bar;
+		}
+
+		@Override
+		protected String doInBackground(Void... arg0) {
+			return fixedImage(srcPath, mContext);
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			mImageView.setImage(new FileBitmapDecoderFactory(result), false);
+			mBar.setVisibility(View.GONE);
+		}
+		
+	}
+	
+	public String fixedImage(String filePath, Context context){
+		File srcFile = new File(filePath);
+		int degree = 0;
+		if(srcFile != null && srcFile.exists()){
+			degree = BitmapToolkit.readPictureDegree(filePath);
+			if(degree == 0){
+				return filePath;
+			}
+			
+			String cachePath = context.getExternalCacheDir().getAbsolutePath() + "/image/modifiedImg.jpg";
+			File file = new File(cachePath);
+			if(!file.getParentFile().exists()){
+				file.getParentFile().mkdirs();
+			}
+			
+			Log.i("debug", "fixed rotated");
+			Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+			bitmap = BitmapToolkit.rotaingImageView(degree, bitmap);
+			try {
+				bitmap.compress(CompressFormat.JPEG, 80, new FileOutputStream(cachePath));
+				return cachePath;
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		return filePath;
 	}
 	
 }

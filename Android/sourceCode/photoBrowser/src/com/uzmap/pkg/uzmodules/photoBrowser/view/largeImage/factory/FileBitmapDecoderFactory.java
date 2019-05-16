@@ -32,4 +32,9 @@ public class FileBitmapDecoderFactory implements BitmapDecoderFactory {
         BitmapFactory.decodeFile(path, options);
         return new int[]{options.outWidth, options.outHeight};
     }
+
+	@Override
+	public String getImagePath() {
+		return this.path;
+	}
 }

@@ -24,6 +24,9 @@ import java.util.concurrent.Executors;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import com.uzmap.pkg.uzcore.UZCoreUtil;
+import com.uzmap.pkg.uzmodules.photoBrowser.view.largeImage.LargeImageView;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -58,8 +61,7 @@ public class ImageLoader {
 	/**
 	 * the path of the cache
 	 */
-	private String CACHE_PATH = Environment.getExternalStorageDirectory()
-			+ "/.image";
+	private String CACHE_PATH = Environment.getExternalStorageDirectory() + "/.image";
 
 	/**
 	 * the number of concurrent threads
@@ -150,6 +152,8 @@ public class ImageLoader {
 		if (placeHolderBmp != null) {
 			if (view instanceof ImageView) {
 				((ImageView) view).setImageBitmap(placeHolderBmp);
+			} else if(view instanceof LargeImageView){
+				((LargeImageView) view).setImage(placeHolderBmp);
 			} else {
 				view.setBackgroundDrawable(new BitmapDrawable(placeHolderBmp));
 			}
@@ -169,7 +173,7 @@ public class ImageLoader {
 
 	public void load(View view, final String path,
 			OnLoadProgressListener progressListener) {
-
+		
 		// load from memory at first
 		Bitmap cacheBitmap = caches.get(md5(path));
 
@@ -183,6 +187,7 @@ public class ImageLoader {
 	}
 
 	public void load(View view, final String path, int corner) {
+		
 		// load from memory
 		Bitmap cacheBitmap = caches.get(md5(path));
 
@@ -193,6 +198,12 @@ public class ImageLoader {
 			setImage(view, cacheBitmap, corner, null);
 		}
 	}
+	
+	public void pushCookie(String url){
+		String cookie = UZCoreUtil.getCookie(url);
+		UZCoreUtil.setCookie(url, cookie);
+	}
+	
 
 	public void setPlaceHolderBitmap(Bitmap bmp) {
 		this.placeHolderBmp = bmp;
@@ -218,6 +229,7 @@ public class ImageLoader {
 				HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
 				urlConnection.setConnectTimeout(TIME_OUT);
 				urlConnection.setReadTimeout(TIME_OUT);
+				urlConnection.setRequestProperty("Cookie", UZCoreUtil.getCookie(path)); 
 				Bitmap bitmap = BitmapFactory.decodeStream(urlConnection.getInputStream());
 				return bitmap;
 			} catch (IOException e) {
@@ -229,6 +241,7 @@ public class ImageLoader {
 				URLConnection urlConnection = url.openConnection();
 				urlConnection.setConnectTimeout(TIME_OUT);
 				urlConnection.setReadTimeout(TIME_OUT);
+				urlConnection.setRequestProperty("Cookie", UZCoreUtil.getCookie(path)); 
 				Bitmap bitmap = BitmapFactory.decodeStream(urlConnection.getInputStream());
 
 				return bitmap;
@@ -459,14 +472,15 @@ public class ImageLoader {
 
 				if (view instanceof ImageView) {
 					((ImageView) view).setImageBitmap(bitmap);
+				} else if(view instanceof LargeImageView){
+					((LargeImageView) view).setImage(bitmap);
 				} else {
 					view.setBackgroundDrawable(new BitmapDrawable(bitmap));
 				}
-
+				
 				if (progressBar != null) {
 					progressBar.setVisibility(View.GONE);
 				}
-
 			}
 
 		});

@@ -165,7 +165,7 @@ public class UpdateImageView extends UpdateView implements OnImageLoadListener, 
     }
 
     @Override
-    public void setImage(BitmapDecoderFactory factory) {
+    public void setImage(BitmapDecoderFactory factory, boolean isPlaceHolder) {
         setImage(factory, null);
     }
 

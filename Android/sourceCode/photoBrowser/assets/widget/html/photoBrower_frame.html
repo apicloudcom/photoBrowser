@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .selectWays{
+        display: flex;
+        justify-content: space-between;
+        padding: 20px 60px;
+        margin-bottom:
+    }
+  </style>
+</head>
+
+<body>
+    <div class="selectWays">
+        <div tapmode onclick="scanImg('picture')">扫描图片资源</div>
+        <div tapmode onclick="scanImg('video')">扫描视频资源</div>
+    </div>
+    <div>
+        图片显示区域
+        <div class="imageShow"></div>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.js"></script>
+<script>
+apiready = function() {
+
+}
+  function scanImg(type){
+      var UIMediaScanner = api.require('UIMediaScanner');
+      UIMediaScanner.open({
+        type: type,
+        column: 4,
+        classify: true,
+        max: 1,
+        sort: {
+          key: 'time',
+          order: 'desc'
+        },
+        texts: {
+          stateText: '已选择*项',
+          cancelText: '取消',
+          finishText: '完成'
+        },
+        styles: {
+          bg: '#fff',
+          mark: {
+            icon: '',
+            position: 'bottom_left',
+            size: 20
+          },
+          nav: {
+            bg: '#eee',
+            stateColor: '#000',
+            stateSize: 18,
+            cancelBg: 'rgba(0,0,0,0)',
+            cancelColor: '#000',
+            cancelSize: 18,
+            finishBg: 'rgba(0,0,0,0)',
+            finishColor: '#000',
+            finishSize: 18
+          }
+        },
+        scrollToBottom: {
+          intervalTime: 3,
+          anim: true
+        },
+        exchange: true,
+        rotation: true
+      }, function(ret) {
+        if (ret) {
+            var imgPath = ret.list[0].path;
+            fnUpdateImg(imgPath);
+        }
+      });
+  }
+
+  // 渲染图片
+  function fnUpdateImg(images) {
+    $('.imageShow').html(
+        '<image style="width: 100%;" src="'+ images +'">'
+    )
+  }
+</script>
+
+</html>
